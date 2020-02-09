@@ -69,6 +69,8 @@ class LinearPower(object):
         self.outdir = cosmo["PathToOutput"]
         self.redshift = float(self.cosmo['z_pk'])
         self.klist = klist
+        self.Omega_m = 1 - float(self.cosmo['Omega_Lambda'])
+        print(self.Omega_m)
 
     def create_parfile(self):
         """
@@ -111,9 +113,3 @@ class LinearPower(object):
         value for this parameter
         """
         return self._sigma8
-
-    def Omega_m(self):
-        """
-        The present day value of ``Omega_m=Omega_cdm+Omega_b+Omega_nu``
-        """
-        return self._Omega_m
