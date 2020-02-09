@@ -6,7 +6,7 @@ SRC = $(wildcard *.cpp)
 OBJ = $(SRC: .cpp=.o) 
 STD = -std=c++11
 GSL = -lm -lgsl -lgslcblas
-FFTW = -lfftw3
+FFTW = -lfftw3 -lfftw3_omp -I/home/sbrieden/software/fftw3_threads/include/ -L//home/sbrieden/software/fftw3_threads/lib/
 
 
 all: $(EXEC)

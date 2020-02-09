@@ -1,16 +1,16 @@
 import numpy as np
 import os
 import plinear
-import pnonlinear
 import copy
 from scipy.optimize import fsolve
 import configobj as cfg
 
-configfile = "config_paper.ini"
-gridname = "z0p55-A_s-h-omega_cdm-omega_b-n_s-Sum_mnu"
-freepar = ["A_s", "h", "omega_cdm", "omega_b", "n_s", "Sum_mnu"]
-# dx = np.array([0.1, 0.02, 0.04, 0.04, 0.02, 0.25])  # Relative error. DO NOT CHANGE FOR A FIXED GRID!
-dx = np.array([0.15, 0.02, 0.04, 0.04, 0.02, 0.25])  # Relative error. DO NOT CHANGE FOR A FIXED GRID!
+configfile = "config_D.ini"
+gridname = "z0p5-A_s-h-omega_cdm-omega_b-n_s"
+freepar = ["A_s", "h", "omega_cdm", "omega_b", "n_s"]
+#dx = np.array([0.15, 0.04, 0.06, 0.06, 0.04])  # Relative error. DO NOT CHANGE FOR A FIXED GRID!
+dx = np.array([0.15, 0.02, 0.04, 0.04, 0.02])
+# dx = np.array([0.15, 0.02, 0.04, 0.04, 0.02, 0.25])  # Relative error. DO NOT CHANGE FOR A FIXED GRID!
 order = 2  # For the moment I keep this same for everything.
 center = order + 1 # Here we use a smaller grid, then padded with zeros
 
@@ -54,22 +54,15 @@ def CompPterms(pardict, kmin=0.001, kmax=0.31):
     returns Plin, Ploop concatenated for multipoles, shape (lenk * 3, columns).
     The zeroth column are the k"""
     parlinear = copy.deepcopy(pardict)
-    parnonlinear = copy.deepcopy(pardict)
     # print("As", parlinear["A_s"])
     if "ln10^{10}A_s" in parlinear.keys():
         print("we have the log here")
-    m1, m2, m3 = get_masses(float(parlinear['Sum_mnu']))
-    parlinear['m_ncdm'] = str(m1) + ', ' + str(m2) + ', ' + str(m3)
+    if float(parlinear['N_ncdm']) > 0:
+        m1, m2, m3 = get_masses(float(parlinear['Sum_mnu']))
+        parlinear['m_ncdm'] = str(m1) + ', ' + str(m2) + ', ' + str(m3)
     this_plin = plinear.LinearPower(parlinear, np.logspace(np.log10(1.e-7), np.log10(2.01), 150))
     this_plin.compute()
-    parnonlinear["PathToLinearPowerSpectrum"] = os.path.join(parnonlinear["PathToOutput"], "class_pk.dat")
-    try:
-        if not os.path.isdir(parnonlinear["PathToOutput"]):
-            os.makedirs(parnonlinear["PathToOutput"])
-    except IOError:
-        print("Cannot create directory: %s" % parnonlinear["PathToOutput"])
-    pnl = pnonlinear.NonLinearPower(parnonlinear, kmin, kmax)
-    pnl.compute()
-    Plin = pnl.get_Plin_resum()
-    Ploop = pnl.get_Ploop_resum()
-    return Plin, Ploop
+    kin, Plin = np.loadtxt(os.path.join(parlinear["PathToOutput"], "class_pk.dat"), unpack=True)
+    z = this_plin.redshift
+    Om_m = this_plin.Omega_m
+    return kin, Plin, z, Om_m
