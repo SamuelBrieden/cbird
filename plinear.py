@@ -69,7 +69,7 @@ class LinearPower(object):
         self.outdir = cosmo["PathToOutput"]
         self.redshift = float(self.cosmo['z_pk'])
         self.klist = klist
-        self.Omega_m = 1 - float(self.cosmo['Omega_Lambda'])
+        self.Omega_m = (float(self.cosmo['omega_b'])+float(self.cosmo['omega_cdm']))/float(self.cosmo['h'])**2
         print(self.Omega_m)
 
     def create_parfile(self):
