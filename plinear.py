@@ -111,3 +111,9 @@ class LinearPower(object):
         value for this parameter
         """
         return self._sigma8
+
+    def Omega_m(self):
+        """
+        The present day value of ``Omega_m=Omega_cdm+Omega_b+Omega_nu``
+        """
+        return self._Omega_m
