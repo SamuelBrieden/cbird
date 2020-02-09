@@ -15,7 +15,7 @@ ntot = nruns * nranks
 
 linfailed = []
 loopfailed = []
-for i in range(nruns):
+for i in range(1,nruns+1):
     print(i)
     for j in range(nranks):
         checklin = os.path.isfile(os.path.join(
@@ -50,7 +50,7 @@ if (len(linfailed) + len(loopfailed)) > 0:
 
 gridlin = []
 gridloop = []
-for i in range(nruns):
+for i in range(1,nruns+1):
     print("Run ", i)
     for j in range(nranks):
         Plin = np.load(os.path.join(
