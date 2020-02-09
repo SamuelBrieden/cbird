@@ -5,7 +5,7 @@ import copy
 from scipy.optimize import fsolve
 import configobj as cfg
 
-configfile = "config_D.ini"
+configfile = "patchy.ini"
 gridname = "z0p5-A_s-h-omega_cdm-omega_b-n_s"
 freepar = ["A_s", "h", "omega_cdm", "omega_b", "n_s"]
 #dx = np.array([0.15, 0.04, 0.06, 0.06, 0.04])  # Relative error. DO NOT CHANGE FOR A FIXED GRID!
